@@ -6,7 +6,7 @@ JsDataFlowEditor is a graph editing widget based on Raphael.  It's optimally sui
 Have any examples?
 ==================
 
-- http://daeken.github.com/JsDataFlowEditor/Examples/Alyn/ -- Work in progress audio synthesizer
+- [http://daeken.github.com/JsDataFlowEditor/Examples/Alyn/](http://daeken.github.com/JsDataFlowEditor/Examples/Alyn/) -- Work in progress audio synthesizer
 
 How do you use it?
 ==================
