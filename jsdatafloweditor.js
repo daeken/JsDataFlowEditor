@@ -165,7 +165,7 @@ graphEditor.prototype.rigConnections = function(point) {
 		function(e) {
 			(e.originalEvent || e).preventDefault();
 
-			var circle = sthis.raphael.circle(point.circle.attr('cx'), point.circle.attr('cy'), 1);
+			var circle = sthis.raphael.circle(e.offsetX, e.offsetY, 1);
 			if(!point.multi && point.connections.length != 0) {
 				var other = point.connections[0];
 				beginning = other.circle;
