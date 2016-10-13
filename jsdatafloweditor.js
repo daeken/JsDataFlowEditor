@@ -36,7 +36,7 @@ function event(onAdd, onRemove) {
 	evt.clear = function() {
 		hooks = [];
 	};
-	
+
 	return evt;
 };
 
@@ -127,16 +127,16 @@ var connecting = null;
 var connectionCallback = null;
 
 var defaultTheme = {
-	nodeFill: '#eee', 
-	pointInactive: '#fff', 
+	nodeFill: '#eee',
+	pointInactive: '#fff',
 	pointActive: '#ccc',
-	
-	connectingFill: '#fff', 
-	connectingStroke: '#000', 
-	connectingStrokeWidth: '3', 
-	
-	lineFill: 'blue', 
-	lineStroke: '#000', 
+
+	connectingFill: '#fff',
+	connectingStroke: '#000',
+	connectingStrokeWidth: '3',
+
+	lineFill: 'blue',
+	lineStroke: '#000',
 	lineStrokeWidth: '3'
 };
 
@@ -151,11 +151,11 @@ function graphEditor(id, width, height, theme) {
 			if(this.theme[k] == undefined)
 				this.theme[k] = defaultTheme[k];
 	}
-	
+
 	this.raphael = Raphael(id, width, height);
 	this.nodes = [];
 	this.selected = null;
-	
+
 	return true;
 }
 
@@ -164,7 +164,7 @@ graphEditor.prototype.rigConnections = function(point) {
 	point.circle.mousedown(
 		function(e) {
 			(e.originalEvent || e).preventDefault();
-			
+
 			var circle = sthis.raphael.circle(point.circle.attr('cx'), point.circle.attr('cy'), 1);
 			if(!point.multi && point.connections.length != 0) {
 				var other = point.connections[0];
@@ -184,7 +184,7 @@ graphEditor.prototype.rigConnections = function(point) {
 				jo.unbind('mousemove', mousemove);
 			}
 			jo.mouseup(mouseup);
-			
+
 			var sx = undefined, sy = undefined;
 			var mousemove = function(e) {
 				if(sx == undefined) {
@@ -197,7 +197,7 @@ graphEditor.prototype.rigConnections = function(point) {
 				sy = e.pageY;
 			}
 			jo.mousemove(mousemove);
-			
+
 			connectionCallback = function(cpoint) {
 				if(cpoint.dir != connecting.dir && cpoint.parent != connecting.parent)
 					connecting.connect(sthis.raphael, cpoint);
@@ -207,7 +207,7 @@ graphEditor.prototype.rigConnections = function(point) {
 	point.circle.mouseup(
 		function(e) {
 			if(connecting == null) return;
-			
+
 			connectionCallback(point);
 		}
 	);
@@ -216,7 +216,7 @@ graphEditor.prototype.rigConnections = function(point) {
 graphEditor.prototype.addNode = function(x, y, node) {
 	var sthis = this;
 	this.nodes.push(node);
-	
+
 	node.raphael = this.raphael;
 	node.parent = this;
 	node.focus.add(
@@ -234,7 +234,7 @@ graphEditor.prototype.addNode = function(x, y, node) {
 			this.element.attr('stroke-width', 1);
 		}
 	);
-	
+
 	var temp = [];
 	ly = y+35;
 	mx = 0;
@@ -270,12 +270,12 @@ graphEditor.prototype.addNode = function(x, y, node) {
 	}
 	ly = y+35;
 	ex = lx + mx + 10;
-	
+
 	var text = this.raphael.text(x+20, y+15, node.title).attr({fill: '#000', 'font-size': 16, 'font-weight': 'bold'}).xlateText();
 	bbox = text.getBBox();
 	if(ex < bbox.width + 80)
 		ex = bbox.width + 80;
-	
+
 	for(i in labels) {
 		var label = labels[i];
 		label.point.circle = circle = this.raphael.circle(ex, ly, 7.5).attr({stroke: '#000', fill: this.theme.pointInactive}).toFront();
@@ -285,12 +285,12 @@ graphEditor.prototype.addNode = function(x, y, node) {
 		temp.push(circle);
 		temp.push(label);
 	}
-	
+
 	rect = this.raphael.rect(x, y, ex+10 - x, Math.max(my, ly) - y, 10).attr({fill: this.theme.nodeFill, 'fill-opacity': 0.9});
 	var set = node.element = this.raphael.set().push(rect, text.toFront());
 	for(i in temp)
 		set.push(temp[i].toFront());
-	
+
 	var suppressSelect = false;
 	rect.click(
 		function() {
@@ -304,7 +304,7 @@ graphEditor.prototype.addNode = function(x, y, node) {
 				node.focus();
 		}
 	);
-	
+
 	function start() {
 		this.cx = this.cy = 0;
 		this.moved = false;
@@ -318,7 +318,6 @@ graphEditor.prototype.addNode = function(x, y, node) {
 		set.toFront();
 		for(i in node.points)
 			node.points[i].fixConnections(sthis.raphael);
-		sthis.raphael.safari();
 	}
 	function end() {
 		set.animate({'fill-opacity': 0.9}, 250);
@@ -332,7 +331,7 @@ function graphNode(id, title) {
 	this.id = id;
 	this.title = title;
 	this.points = [];
-	
+
 	this.focus = event().add(function() {
 		this.selected = true;
 	});
@@ -352,7 +351,7 @@ function graphNode(id, title) {
 			this.points[i].remove(this.raphael);
 	});
 	this.selected = false;
-	
+
 	return true;
 }
 
@@ -370,10 +369,10 @@ function point(parent, label, dir, multi) {
 		this.multi = dir == 'out';
 	else
 		this.multi = multi;
-	
+
 	this.connections = [];
 	this.lines = []
-	
+
 	return true;
 }
 
@@ -387,30 +386,29 @@ point.prototype.remove = function(raphael) {
 point.prototype.connect = function(raphael, other, sub) {
 	var sthis = this;
 	var editor = this.parent.parent;
-	
+
 	if(sub !== true) {
 		if(!this.multi && this.connections.length != 0)
 			return false;
 		else if(!other.multi && other.connections.length != 0)
 			return false;
 	}
-	
+
 	this.connections.push(other);
 	this.circle.attr({fill: editor.theme.pointActive});
 	if(sub !== true) {
 		function remove() {
 			sthis.removeConnection(raphael, other);
-			raphael.safari();
 		}
-		
+
 		other.connect(raphael, this, true);
 		line = raphael.connection(this.circle, other.circle, editor.theme.lineFill, editor.theme.lineStroke + '|' + editor.theme.lineStrokeWidth, remove);
 		this.lines.push(line);
 		other.lines.push(line);
 	}
-	
+
 	this.parent.connect(this, other);
-	
+
 	return true;
 };
 
@@ -426,15 +424,14 @@ point.prototype.removeConnection = function(raphael, other, sub) {
 			this.lines.splice(i, 1);
 			break;
 		}
-	
+
 	if(this.connections.length == 0)
 		this.circle.attr({fill: editor.theme.pointInactive});
-	
+
 	this.parent.disconnect(this, other);
 };
 
 point.prototype.fixConnections = function(raphael) {
 	for(var i in this.lines)
 		raphael.connection(this.lines[i]);
-	raphael.safari();
 };
